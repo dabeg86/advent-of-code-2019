@@ -28,7 +28,9 @@ def find_polar_coordinates_of_asteroids(center_position, asteroid_positions):
             y = oy - cy
             # Polar coordinates
             rho = math.sqrt(x*x + y*y)
-            theta = ((math.atan2(y, x)*(180/math.pi))-90) % 360
+            theta = math.atan2(y, x)*(180/math.pi)+90
+            if theta < 0:
+                theta += 360
             if theta not in polar_coords:
                 polar_coords[theta] = {rho: asteroid}
             else:
@@ -54,7 +56,7 @@ def find_asteroids_in_positions(asteroids):
     return sums
 
 
-with open("test") as f:
+with open("input.txt") as f:
     program = [list(line.strip()) for line in f.readlines()]
     asteroids = map_asteroids(program)
 
@@ -64,22 +66,19 @@ with open("test") as f:
         max_val = max(val, max_val)
         if val == max_val:
             best_pos = pos
-    print('Part1\nPosition: “{}”\nAsteroids_detected: “{}”'.format(best_pos,
-                                                                   max_val))
+    print('Part1: {}'.format(max_val))
 
     polar_coords = find_polar_coordinates_of_asteroids(best_pos, asteroids)
     all_angles_sorted = sorted(polar_coords.keys())
-    all_angles_sorted.reverse()
-    print(all_angles_sorted)
+
     i = 0
     while len(polar_coords) > 0:
         for angle in all_angles_sorted:
             if angle in polar_coords.keys():
                 shortest_distance = sorted(polar_coords[angle].keys())[0]
                 i += 1
-                #print(polar_coords[angle])
                 x, y = polar_coords[angle][shortest_distance]
-                print(i, x, y)
+                # print(i, x, y)
                 if i == 200:
                     print('Part2: {}'.format(int(x) * 100 + int(y)))
                 polar_coords[angle].pop(shortest_distance)
