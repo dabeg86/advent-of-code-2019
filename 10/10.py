@@ -54,7 +54,7 @@ def find_asteroids_in_positions(asteroids):
     return sums
 
 
-with open("input.txt") as f:
+with open("test") as f:
     program = [list(line.strip()) for line in f.readlines()]
     asteroids = map_asteroids(program)
 
@@ -70,19 +70,18 @@ with open("input.txt") as f:
     polar_coords = find_polar_coordinates_of_asteroids(best_pos, asteroids)
     all_angles_sorted = sorted(polar_coords.keys())
     all_angles_sorted.reverse()
+    print(all_angles_sorted)
     i = 0
-    while i < 200:
+    while len(polar_coords) > 0:
         for angle in all_angles_sorted:
-            if angle not in polar_coords.keys():
-                continue
-            shortest_distance = sorted(polar_coords[angle].keys())[0]
-            last_vaporized = polar_coords[angle][shortest_distance]
-            polar_coords[angle].pop(shortest_distance)
-            if len(polar_coords[angle]) == 0:
-                polar_coords.pop(angle)
-            i += 1
-            print(i)
-    print(i)
-
-    x, y = last_vaporized
-    print('Part2: {}'.format(int(x)*100 + int(y)))
+            if angle in polar_coords.keys():
+                shortest_distance = sorted(polar_coords[angle].keys())[0]
+                i += 1
+                #print(polar_coords[angle])
+                x, y = polar_coords[angle][shortest_distance]
+                print(i, x, y)
+                if i == 200:
+                    print('Part2: {}'.format(int(x) * 100 + int(y)))
+                polar_coords[angle].pop(shortest_distance)
+                if len(polar_coords[angle]) == 0:
+                    polar_coords.pop(angle)
